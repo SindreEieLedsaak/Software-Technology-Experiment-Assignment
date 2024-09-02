@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.UUID;
 
 @RestController
@@ -20,11 +22,14 @@ public class VoteOptionController {
     }
 
     @PostMapping
-    public ResponseEntity<VoteOption> createVoteOption(@RequestBody VoteOption voteOption) {
-        VoteOption createdVoteOption = domainManager.addVoteOption(voteOption);
-        return ResponseEntity.ok(createdVoteOption);
+    public ResponseEntity<HashMap<UUID,VoteOption>> createVoteOption(@RequestBody VoteOption voteOption) {
+        HashMap<UUID,VoteOption> voteOptionHashMap = domainManager.addVoteOption(voteOption);
+        return ResponseEntity.ok(voteOptionHashMap);
     }
-
+    @GetMapping
+    public ResponseEntity<Collection<VoteOption>> getAllVoteOptions() {
+        return ResponseEntity.ok(domainManager.getAllVoteOptions());
+    }
     @GetMapping("/{id}")
     public ResponseEntity<VoteOption> getVoteOption(@PathVariable UUID id) {
         VoteOption voteOption = domainManager.getVoteOption(id);

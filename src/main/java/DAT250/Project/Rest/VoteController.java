@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.UUID;
 
 @RestController
@@ -20,9 +22,13 @@ public class VoteController {
     }
 
     @PostMapping
-    public ResponseEntity<Vote> createVote(@RequestBody Vote vote) {
-        Vote createdVote = domainManager.addVote(vote);
+    public ResponseEntity<HashMap<UUID,Vote>> createVote(@RequestBody Vote vote) {
+        HashMap<UUID,Vote> createdVote = domainManager.addVote(vote);
         return ResponseEntity.ok(createdVote);
+    }
+    @GetMapping
+    public ResponseEntity<Collection<Vote>> getAllVotes() {
+        return ResponseEntity.ok(domainManager.getAllVotes());
     }
 
     @GetMapping("/{id}")

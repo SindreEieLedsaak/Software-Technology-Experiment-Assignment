@@ -5,8 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -24,7 +23,11 @@ public class UserController {
         HashMap<UUID,User> userMap = domainManager.addUser(user);
         return ResponseEntity.ok(userMap);
     }
+    @GetMapping
+    public ResponseEntity<Collection<User>> getAllUsers() {
 
+        return ResponseEntity.ok(domainManager.getAllUsers());
+    }
     @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable UUID id) {
         User user = domainManager.getUser(id);

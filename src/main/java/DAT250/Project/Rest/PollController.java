@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -24,7 +26,10 @@ public class PollController {
         HashMap<UUID,Poll> createdPoll = domainManager.addPoll(poll);
         return ResponseEntity.ok(createdPoll);
     }
-
+    @GetMapping()
+    public ResponseEntity<Collection<Poll>> getAllPolls() {
+        return ResponseEntity.ok(domainManager.getAllPolls());
+    }
     @GetMapping("/{id}")
     public ResponseEntity<Poll> getPoll(@PathVariable UUID id) {
         Poll poll = domainManager.getPoll(id);

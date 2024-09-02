@@ -1,9 +1,8 @@
 package DAT250.Project.Domainclasses;
 
 import org.springframework.stereotype.Component;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+
+import java.util.*;
 
 @Component
 public class DomainManager {
@@ -26,6 +25,10 @@ public class DomainManager {
         return users.get(id);
     }
 
+    public Collection<User> getAllUsers() {
+        return users.values();
+    }
+
     public User updateUser(UUID id, User user) {
         return users.put(id, user);
     }
@@ -46,6 +49,9 @@ public class DomainManager {
     public Poll getPoll(UUID id) {
         return polls.get(id);
     }
+    public Collection<Poll> getAllPolls() {
+        return polls.values();
+    }
 
     public Poll updatePoll(UUID id, Poll poll) {
         return polls.put(id, poll);
@@ -56,10 +62,12 @@ public class DomainManager {
     }
 
     // Vote management
-    public Vote addVote(Vote vote) {
+    public HashMap<UUID, Vote> addVote(Vote vote) {
         UUID id = UUID.randomUUID();
         votes.put(id, vote);
-        return vote;
+        HashMap<UUID,Vote> map = new HashMap<>();
+        map.put(id, vote);
+        return map;
     }
 
     public Vote getVote(UUID id) {
@@ -75,12 +83,16 @@ public class DomainManager {
     }
 
     // VoteOption management
-    public VoteOption addVoteOption(VoteOption voteOption) {
+    public HashMap<UUID,VoteOption> addVoteOption(VoteOption voteOption) {
         UUID id = UUID.randomUUID();
         voteOptions.put(id, voteOption);
-        return voteOption;
+        HashMap<UUID,VoteOption> map = new HashMap<>();
+        map.put(id, voteOption);
+        return map;
     }
-
+    public Collection<VoteOption> getAllVoteOptions() {
+        return voteOptions.values();
+    }
     public VoteOption getVoteOption(UUID id) {
         return voteOptions.get(id);
     }
@@ -92,4 +104,8 @@ public class DomainManager {
     public VoteOption deleteVoteOption(UUID id) {
         return voteOptions.remove(id);
     }
+    public Collection<Vote> getAllVotes() {
+        return votes.values();
+    }
+
 }

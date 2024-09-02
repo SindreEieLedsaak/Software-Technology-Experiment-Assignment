@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 @RestController
@@ -19,8 +20,8 @@ public class PollController {
     }
 
     @PostMapping
-    public ResponseEntity<Poll> createPoll(@RequestBody Poll poll) {
-        Poll createdPoll = domainManager.addPoll(poll);
+    public ResponseEntity<HashMap<UUID,Poll>> createPoll(@RequestBody Poll poll) {
+        HashMap<UUID,Poll> createdPoll = domainManager.addPoll(poll);
         return ResponseEntity.ok(createdPoll);
     }
 

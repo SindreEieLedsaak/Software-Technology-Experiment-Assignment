@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 @RestController
@@ -19,9 +20,9 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User createdUser = domainManager.addUser(user);
-        return ResponseEntity.ok(createdUser);
+    public ResponseEntity<HashMap<UUID,User>> createUser(@RequestBody User user) {
+        HashMap<UUID,User> userMap = domainManager.addUser(user);
+        return ResponseEntity.ok(userMap);
     }
 
     @GetMapping("/{id}")

@@ -14,10 +14,12 @@ public class DomainManager {
     private final Map<UUID, VoteOption> voteOptions = new HashMap<>();
 
     // User management
-    public User addUser(User user) {
+    public HashMap<UUID,User> addUser(User user) {
         UUID id = UUID.randomUUID();
         users.put(id, user);
-        return user;
+        HashMap<UUID,User> userMap = new HashMap<>();
+        userMap.put(id, user);
+        return userMap;
     }
 
     public User getUser(UUID id) {
@@ -33,10 +35,12 @@ public class DomainManager {
     }
 
     // Poll management
-    public Poll addPoll(Poll poll) {
+    public HashMap<UUID, Poll> addPoll(Poll poll) {
         UUID id = UUID.randomUUID();
         polls.put(id, poll);
-        return poll;
+        HashMap<UUID,Poll> map = new HashMap<>();
+        map.put(id, poll);
+        return map;
     }
 
     public Poll getPoll(UUID id) {

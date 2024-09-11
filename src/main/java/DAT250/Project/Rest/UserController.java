@@ -1,4 +1,5 @@
 package DAT250.Project.Rest;
+
 import DAT250.Project.Domainclasses.DomainManager;
 import DAT250.Project.Domainclasses.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = "http://localhost:5174")
 public class UserController {
 
     private final DomainManager domainManager;
@@ -19,15 +21,17 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<HashMap<UUID,User>> createUser(@RequestBody User user) {
-        HashMap<UUID,User> userMap = domainManager.addUser(user);
+    public ResponseEntity<HashMap<UUID, User>> createUser(@RequestBody User user) {
+        HashMap<UUID, User> userMap = domainManager.addUser(user);
         return ResponseEntity.ok(userMap);
     }
+
     @GetMapping
     public ResponseEntity<Collection<User>> getAllUsers() {
 
         return ResponseEntity.ok(domainManager.getAllUsers());
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable UUID id) {
         User user = domainManager.getUser(id);
@@ -46,4 +50,3 @@ public class UserController {
         return deletedUser != null ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 }
-

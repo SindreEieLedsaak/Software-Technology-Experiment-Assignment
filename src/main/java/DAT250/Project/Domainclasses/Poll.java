@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Poll {
+    private int userid;
     private String question;
     private Instant publishedAt;
     private Instant validUntil;
@@ -15,6 +16,7 @@ public class Poll {
         this.publishedAt = publishedAt;
         this.validUntil = validUntil;
         this.voteOptions = new HashSet<>();
+
     }
 
     // Getters and Setters
@@ -49,5 +51,8 @@ public class Poll {
     public void setVoteOptions(Set<VoteOption> voteOptions) {
         this.voteOptions = voteOptions;
     }
-}
 
+    public int getUserid() {
+        return userid;
+    }
+}

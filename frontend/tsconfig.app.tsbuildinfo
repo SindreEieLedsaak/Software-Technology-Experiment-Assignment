@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/poll/createpoll.tsx","./src/components/poll/polllist.tsx","./src/components/user/userregistration.tsx","./src/services/pollservice.tsx","./src/services/userservice.tsx"],"version":"5.6.2"}

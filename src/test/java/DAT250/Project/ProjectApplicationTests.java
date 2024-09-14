@@ -27,8 +27,8 @@ class ProjectApplicationTests {
 	void scenarioTest() throws Exception {
 		// 1. Create a new user
 		MvcResult user1Result = mockMvc.perform(post("/api/users")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content("{\"username\": \"user1\", \"email\": \"user1@example.com\"}"))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{\"username\": \"user1\", \"email\": \"user1@example.com\"}"))
 				.andExpect(status().isOk())
 				.andReturn();
 
@@ -37,12 +37,12 @@ class ProjectApplicationTests {
 		// 2. List all users (-> shows the newly created user)
 		mockMvc.perform(get("/api/users"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$[0].username").value("user1"));
+				.andExpect(jsonPath("$.*.username").value("user1"));
 
 		// 3. Create another user
 		MvcResult user2Result = mockMvc.perform(post("/api/users")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content("{\"username\": \"user2\", \"email\": \"user2@example.com\"}"))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{\"username\": \"user2\", \"email\": \"user2@example.com\"}"))
 				.andExpect(status().isOk())
 				.andReturn();
 
@@ -51,13 +51,14 @@ class ProjectApplicationTests {
 		// 4. List all users again (-> shows two users)
 		mockMvc.perform(get("/api/users"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(2)))
-				.andExpect(jsonPath("$[*].username", containsInAnyOrder("user1", "user2")));
+				.andExpect(jsonPath("$.length()", is(2))) // Check the map has 2 entries
+				.andExpect(jsonPath("$.*.username", containsInAnyOrder("user1", "user2"))); // Check for both usernames
 
 		// 5. User 1 creates a new poll
 		MvcResult pollResult = mockMvc.perform(post("/api/polls")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content("{\"question\": \"What is your favorite color?\", \"publishedAt\": \"2024-09-02T10:00:00Z\", \"validUntil\": \"2024-09-09T10:00:00Z\"}"))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(
+						"{\"question\": \"What is your favorite color?\", \"publishedAt\": \"2024-09-02T10:00:00Z\", \"validUntil\": \"2024-09-09T10:00:00Z\"}"))
 				.andExpect(status().isOk())
 				.andReturn();
 
@@ -66,14 +67,16 @@ class ProjectApplicationTests {
 		// 6. List polls (-> shows the new poll)
 		mockMvc.perform(get("/api/polls"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.*", hasSize(1)))  // Adjusted path for map-style response
-				.andExpect(jsonPath("$[0].question").value("What is your favorite color?"));
-
+				.andExpect(jsonPath("$.length()", is(1))) // Check that there's one poll (map entry)
+				.andExpect(jsonPath("$.*.question", hasItem("What is your favorite color?"))); // Use wildcard to match
+																								// "question" field in
+																								// the map
 
 		// 7. User 2 votes on the poll
 		MvcResult voteResult = mockMvc.perform(post("/api/votes")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content("{\"pollId\": \"" + pollId + "\", \"voteOption\": {\"caption\": \"Blue\", \"presentationOrder\": 1}}"))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{\"pollId\": \"" + pollId
+						+ "\", \"voteOption\": {\"caption\": \"Blue\", \"presentationOrder\": 1}}"))
 				.andExpect(status().isOk())
 				.andReturn();
 
@@ -81,14 +84,15 @@ class ProjectApplicationTests {
 
 		// 8. User 2 changes his vote
 		mockMvc.perform(put("/api/votes/" + voteId)
-						.contentType(MediaType.APPLICATION_JSON)
-						.content("{\"pollId\": \"" + pollId + "\", \"voteOption\": {\"caption\": \"Green\", \"presentationOrder\": 1}}"))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{\"pollId\": \"" + pollId
+						+ "\", \"voteOption\": {\"caption\": \"Green\", \"presentationOrder\": 1}}"))
 				.andExpect(status().isOk());
 
-		// 9. List votes (-> shows the most recent vote for User 2)
 		mockMvc.perform(get("/api/votes"))
-				.andExpect(status().isOk())  // Check if the status is OK (200)
-				.andExpect(jsonPath("$[0].voteOption.caption").value("Green"));  // Assert that the first vote's option is "Green"
+				.andExpect(status().isOk()) // Check if the status is OK (200)
+				.andExpect(jsonPath("$.length()", is(1))) // Check if there is exactly 1 vote
+				.andExpect(jsonPath("$.*.voteOption.caption", hasItem("Green"))); // Use wildcard to check the "caption"
 
 		// 10. Delete the one poll
 		mockMvc.perform(delete("/api/polls/" + pollId))

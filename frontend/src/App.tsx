@@ -1,102 +1,47 @@
+import React, { useEffect, useState } from 'react';
+import PollList from './components/Poll/PollList';
+import CreatePoll from './components/Poll/CreatePoll';
+import { Poll } from './services/pollService';
+import { User } from './services/userService';
+import UserRegistration from './components/User/UserRegistration';
+import './App.css';
 
-import React, { useState } from 'react';
+const App: React.FC = () => {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
-// NewPoll Component
-function NewPoll() {
-  const [question, setQuestion] = useState('');
-  const [options, setOptions] = useState(['', '']);
+  // Check if user exists in localStorage when app loads
+  useEffect(() => {
+    const user = localStorage.getItem('currentUser');
+    if (user) {
+      // Retrieve the user object directly from localStorage
+      const parsedUser = JSON.parse(user);
+      const userId = Object.keys(parsedUser)[0];  // Extract the user ID
+      const actualUser = parsedUser[userId];  // Get the actual user object
+      setCurrentUser(actualUser);  // Set the actual user in state
+    }
+  }, []);
 
-  const handleOptionChange = (index: number, value: string) => {
-    const newOptions = [...options];
-    newOptions[index] = value;
-    setOptions(newOptions);
-  };
-
-  const addOption = () => {
-    setOptions([...options, '']);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle poll creation logic here
-    console.log('Poll Created:', { question, options });
+  const handleUserCreated = (user: User) => {
+    // Store only the user object (not wrapped in an ID)
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    setCurrentUser(user);  // Set the current user after registration
   };
 
   return (
     <div>
-      <h2>Create a New Poll</h2>
-      <form onSubmit={handleSubmit}>
+      {!currentUser ? (
+        <UserRegistration onUserCreated={handleUserCreated} />
+      ) : (
         <div>
-          <label>Question:</label>
-          <input
-            type="text"
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-          />
+          <h1 className='page-title'>Welcome, {currentUser.username}</h1>  {/* Display the username */}
+          <div style={{ padding: '20px 0' }}> {/* Add padding here */}
+            <CreatePoll onPollCreated={(_: Poll) => { /* Implement poll creation */ }} />
+          </div>
+          <PollList />
         </div>
-        {options.map((option, index) => (
-          <div key={index}>
-            <label>Option {index + 1}:</label>
-            <input
-              type="text"
-              value={option}
-              onChange={(e) => handleOptionChange(index, e.target.value)}
-            />
-          </div>
-        ))}
-        <button type="button" onClick={addOption}>Add Option</button>
-        <button type="submit">Create Poll</button>
-      </form>
+      )}
     </div>
   );
-}
-
-// VotePoll Component
-function VotePoll() {
-  const poll = {
-    question: 'What is your favorite color?',
-    options: ['Red', 'Blue', 'Green', 'Yellow']
-  };
-  const [selectedOption, setSelectedOption] = useState('');
-
-  const handleVote = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle voting logic here
-    console.log('Voted for:', selectedOption);
-  };
-
-  return (
-    <div>
-      <h2>{poll.question}</h2>
-      <form onSubmit={handleVote}>
-        {poll.options.map((option, index) => (
-          <div key={index}>
-            <label>
-              <input
-                type="radio"
-                value={option}
-                checked={selectedOption === option}
-                onChange={(e) => setSelectedOption(e.target.value)}
-              />
-              {option}
-            </label>
-          </div>
-        ))}
-        <button type="submit">Vote</button>
-      </form>
-    </div>
-  );
-}
-
-// App Component
-function App() {
-  return (
-    <div>
-      <h1>Hello World</h1>
-      <NewPoll />
-      <VotePoll />
-    </div>
-  );
-}
+};
 
 export default App;

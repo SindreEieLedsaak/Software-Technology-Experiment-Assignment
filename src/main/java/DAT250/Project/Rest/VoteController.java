@@ -7,11 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/votes")
+@CrossOrigin(origins = "http://localhost:5173")
 public class VoteController {
 
     private final DomainManager domainManager;
@@ -22,31 +22,31 @@ public class VoteController {
     }
 
     @PostMapping
-    public ResponseEntity<HashMap<UUID,Vote>> createVote(@RequestBody Vote vote) {
-        HashMap<UUID,Vote> createdVote = domainManager.addVote(vote);
+    public ResponseEntity<Map.Entry<Integer, Vote>> createVote(@RequestBody Vote vote) {
+        Map.Entry<Integer, Vote> createdVote = domainManager.addVote(vote);
         return ResponseEntity.ok(createdVote);
     }
+
     @GetMapping
-    public ResponseEntity<Collection<Vote>> getAllVotes() {
+    public ResponseEntity<Map<Integer, Vote>> getAllVotes() {
         return ResponseEntity.ok(domainManager.getAllVotes());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Vote> getVote(@PathVariable UUID id) {
-        Vote vote = domainManager.getVote(id);
+    public ResponseEntity<Map.Entry<Integer, Vote>> getVote(@PathVariable Integer id) {
+        Map.Entry<Integer, Vote> vote = domainManager.getVote(id);
         return vote != null ? ResponseEntity.ok(vote) : ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Vote> updateVote(@PathVariable UUID id, @RequestBody Vote vote) {
-        Vote updatedVote = domainManager.updateVote(id, vote);
+    public ResponseEntity<Map.Entry<Integer, Vote>> updateVote(@PathVariable Integer id, @RequestBody Vote vote) {
+        Map.Entry<Integer, Vote> updatedVote = domainManager.updateVote(id, vote);
         return ResponseEntity.ok(updatedVote);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteVote(@PathVariable UUID id) {
-        Vote deletedVote = domainManager.deleteVote(id);
+    public ResponseEntity<Map.Entry<Integer, Vote>> deleteVote(@PathVariable Integer id) {
+        Map.Entry<Integer, Vote> deletedVote = domainManager.deleteVote(id);
         return deletedVote != null ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 }
-

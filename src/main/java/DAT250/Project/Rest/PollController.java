@@ -6,12 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/polls")
+@CrossOrigin(origins = "http://localhost:5173")
 public class PollController {
 
     private final DomainManager domainManager;
@@ -22,31 +21,31 @@ public class PollController {
     }
 
     @PostMapping
-    public ResponseEntity<HashMap<UUID, Poll>> createPoll(@RequestBody Poll poll) {
-        HashMap<UUID, Poll> createdPoll = domainManager.addPoll(poll);
+    public ResponseEntity<Map.Entry<Integer, Poll>> createPoll(@RequestBody Poll poll) {
+        Map.Entry<Integer, Poll> createdPoll = domainManager.addPoll(poll);
         return ResponseEntity.ok(createdPoll);
     }
 
-    @GetMapping()
-    public ResponseEntity<Collection<Poll>> getAllPolls() {
+    @GetMapping
+    public ResponseEntity<Map<Integer, Poll>> getAllPolls() {
         return ResponseEntity.ok(domainManager.getAllPolls());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Poll> getPoll(@PathVariable UUID id) {
-        Poll poll = domainManager.getPoll(id);
-        return poll != null ? ResponseEntity.ok(poll) : ResponseEntity.notFound().build();
+    public ResponseEntity<Map.Entry<Integer, Poll>> getPoll(@PathVariable Integer id) {
+        Map.Entry<Integer, Poll> poll = domainManager.getPoll(id);
+        return ResponseEntity.ok(poll);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Poll> updatePoll(@PathVariable UUID id, @RequestBody Poll poll) {
-        Poll updatedPoll = domainManager.updatePoll(id, poll);
+    public ResponseEntity<Map.Entry<Integer, Poll>> updatePoll(@PathVariable Integer id, @RequestBody Poll poll) {
+        Map.Entry<Integer, Poll> updatedPoll = domainManager.updatePoll(id, poll);
         return ResponseEntity.ok(updatedPoll);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePoll(@PathVariable UUID id) {
-        Poll deletedPoll = domainManager.deletePoll(id);
-        return deletedPoll != null ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+    public ResponseEntity<Map.Entry<Integer, Poll>> deletePoll(@PathVariable Integer id) {
+        Map.Entry<Integer, Poll> deletedPoll = domainManager.deletePoll(id);
+        return ResponseEntity.ok(deletedPoll);
     }
 }

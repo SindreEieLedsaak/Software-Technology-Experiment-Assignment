@@ -10,7 +10,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "http://localhost:5174")
+@CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
 
     private final DomainManager domainManager;
@@ -21,32 +21,32 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<HashMap<UUID, User>> createUser(@RequestBody User user) {
-        HashMap<UUID, User> userMap = domainManager.addUser(user);
+    public ResponseEntity<Map.Entry<Integer, User>> createUser(@RequestBody User user) {
+        Map.Entry<Integer, User> userMap = domainManager.addUser(user);
         return ResponseEntity.ok(userMap);
     }
 
     @GetMapping
-    public ResponseEntity<Collection<User>> getAllUsers() {
+    public ResponseEntity<Map<Integer, User>> getAllUsers() {
 
         return ResponseEntity.ok(domainManager.getAllUsers());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable UUID id) {
-        User user = domainManager.getUser(id);
+    public ResponseEntity<Map.Entry<Integer, User>> getUser(@PathVariable Integer id) {
+        Map.Entry<Integer, User> user = domainManager.getUser(id);
         return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable UUID id, @RequestBody User user) {
-        User updatedUser = domainManager.updateUser(id, user);
+    public ResponseEntity<Map.Entry<Integer, User>> updateUser(@PathVariable Integer id, @RequestBody User user) {
+        Map.Entry<Integer, User> updatedUser = domainManager.updateUser(id, user);
         return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
-        User deletedUser = domainManager.deleteUser(id);
+    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
+        Map.Entry<Integer, User> deletedUser = domainManager.deleteUser(id);
         return deletedUser != null ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 }

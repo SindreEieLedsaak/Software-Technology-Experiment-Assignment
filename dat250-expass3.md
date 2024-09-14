@@ -1,4 +1,4 @@
-# DAT250 Experiment Assignment 6 - Hand-in
+# DAT250 Experiment Assignment 3 - Hand-in
 
 ## 1. Technical Problems Encountered
 
@@ -16,7 +16,7 @@ During the completion of the tutorial, I encountered several technical challenge
 
 You can find my code for experiments 1-2 in the following GitHub repository:
 
-[GitHub Repository Link](https://github.com/your-repository-link)
+[GitHub Repository Link](https://github.com/SindreEieLedsaak/Software-Technology-Experiment-Assignment/tree/main/frontend)
 
 ### Repository Structure:
 
@@ -32,5 +32,6 @@ Despite the progress made, there are still some pending issues:
 - **Error Boundary**: Although React gives recommendations to use error boundaries for better error handling in the app, I did not manage to implement this feature to improve the app’s robustness.
   
 - **Vote State Handling**: Although the voting mechanism works, further improvements could be made to handle errors gracefully if the backend fails to update the vote count (e.g., providing feedback to the user that their vote failed).
+And also link the votes to the user. 
   
 - **User Sessions**: The current implementation relies on `localStorage` for user management. A more robust solution would be to implement session management on the backend to handle logged-in users more securely.
